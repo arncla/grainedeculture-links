@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Graine de Culture</title>
+<meta name="description" content="Graine de Culture, l'app pour cultiver votre curiosité au quotidien. Par Arnaud Clavien.">
+<meta name="theme-color" content="#0A1428">
+
+<meta property="og:title" content="Graine de Culture">
+<meta property="og:description" content="Cultivez votre curiosité au quotidien.">
+<meta property="og:type" content="website">
+
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%230A1428'/%3E%3Cpath d='M50 50 C44 51 39 64 39 78 C39 87 43 94 50 98 C57 94 61 87 61 78 C61 64 56 51 50 50 Z' fill='%23E8DCC0'/%3E%3Cpath d='M50 51 Q51 76 50 97' stroke='%23D4A55A' stroke-width='1.5' fill='none'/%3E%3Cpolygon points='50,18 51.5,24 57.5,25.5 51.5,27 50,33 48.5,27 42.5,25.5 48.5,24' fill='%23D4A55A'/%3E%3C/svg%3E">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --navy-deep: #0A1428;
+  --navy: #0E1B36;
+  --navy-soft: #14254A;
+  --navy-glass: rgba(20, 37, 74, 0.55);
+  --gold: #D4A55A;
+  --gold-bright: #E5B96E;
+  --gold-soft: #B8893E;
+  --gold-glow: rgba(212, 165, 90, 0.55);
+  --cream: #F0E0CC;
+  --cream-dim: rgba(240, 224, 204, 0.72);
+  --cream-faint: rgba(240, 224, 204, 0.4);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  background: var(--navy-deep);
+  color: var(--cream);
+  min-height: 100vh;
+  min-height: 100dvh;
+  position: relative;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+.background {
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% 0%, rgba(20, 37, 74, 0.8) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 100%, rgba(212, 165, 90, 0.06) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 20% 100%, rgba(20, 37, 74, 0.6) 0%, transparent 60%),
+    var(--navy-deep);
+  z-index: -2;
+}
+
+.background::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+  opacity: 0.06;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+}
+
+.fireflies {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.firefly {
+  position: absolute;
+  border-radius: 50%;
+  background: var(--gold);
+  box-shadow:
+    0 0 6px var(--gold-glow),
+    0 0 14px rgba(212, 165, 90, 0.35),
+    0 0 24px rgba(212, 165, 90, 0.15);
+  will-change: transform, opacity;
+}
+
+.container {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+  padding: clamp(40px, 8vh, 72px) 24px clamp(32px, 6vh, 48px);
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 44px;
+  width: 100%;
+}
+
+.logo {
+  width: 112px;
+  height: 112px;
+  margin-bottom: 24px;
+  filter: drop-shadow(0 8px 32px rgba(212, 165, 90, 0.22));
+  opacity: 0;
+  animation: logoEnter 1.4s cubic-bezier(0.2, 0.8, 0.2, 1) 0.1s forwards;
+}
+
+.logo .star {
+  transform-origin: center;
+  animation: twinkle 4s ease-in-out infinite;
+}
+.logo .star-1 { animation-delay: 0s; }
+.logo .star-2 { animation-delay: 1.2s; }
+.logo .star-3 { animation-delay: 2.4s; }
+.logo .star-4 { animation-delay: 0.6s; }
+.logo .star-5 { animation-delay: 1.8s; }
+
+@keyframes twinkle {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.65; }
+}
+
+@keyframes logoEnter {
+  from { opacity: 0; transform: translateY(12px) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.title {
+  font-family: 'Playfair Display', serif;
+  font-weight: 600;
+  font-size: clamp(30px, 7.5vw, 38px);
+  letter-spacing: 0.005em;
+  color: var(--cream);
+  line-height: 1.15;
+  margin-bottom: 10px;
+  opacity: 0;
+  animation: fadeUp 1s ease-out 0.5s forwards;
+}
+
+.title-de {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--gold);
+  font-size: 0.82em;
+  margin: 0 0.18em;
+}
+
+.tagline {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 17px;
+  color: var(--cream-dim);
+  letter-spacing: 0.06em;
+  font-weight: 400;
+  opacity: 0;
+  animation: fadeUp 1s ease-out 0.75s forwards;
+}
+
+.ornament {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin: 28px 0 0;
+  width: 100%;
+  max-width: 220px;
+  opacity: 0;
+  animation: fadeUp 1s ease-out 0.95s forwards;
+}
+
+.ornament .line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(212, 165, 90, 0.5), transparent);
+}
+
+.ornament svg {
+  width: 12px;
+  height: 12px;
+  fill: var(--gold);
+  flex-shrink: 0;
+}
+
+.links {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.link {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  min-height: 64px;
+  padding: 14px 22px;
+  background: var(--navy-glass);
+  border: 1px solid rgba(212, 165, 90, 0.22);
+  border-radius: 8px;
+  color: var(--cream);
+  text-decoration: none;
+  font-family: 'Playfair Display', serif;
+  font-size: 17px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  position: relative;
+  overflow: hidden;
+  opacity: 0;
+  transition:
+    border-color 0.4s ease,
+    background 0.4s ease,
+    transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 0.4s ease;
+}
+
+.link:nth-child(1) { animation: linkEnter 0.7s ease-out 1.15s forwards; }
+.link:nth-child(2) { animation: linkEnter 0.7s ease-out 1.3s forwards; }
+.link:nth-child(3) { animation: linkEnter 0.7s ease-out 1.45s forwards; }
+
+.link-primary {
+  background: linear-gradient(135deg, var(--gold) 0%, var(--gold-soft) 100%);
+  border-color: var(--gold-bright);
+  color: var(--navy-deep);
+  box-shadow:
+    0 4px 16px rgba(212, 165, 90, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.link-primary .link-icon {
+  fill: var(--navy-deep);
+}
+
+.link-primary .link-arrow {
+  stroke: var(--navy-deep);
+  opacity: 0.7;
+}
+
+.link::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70%);
+  transform: translateX(-100%);
+  transition: transform 0.7s ease;
+  pointer-events: none;
+}
+
+@media (hover: hover) {
+  .link:hover {
+    border-color: var(--gold);
+    background: rgba(20, 37, 74, 0.85);
+    transform: translateY(-2px);
+    box-shadow:
+      0 10px 28px rgba(0, 0, 0, 0.35),
+      0 0 0 1px rgba(212, 165, 90, 0.4),
+      0 0 32px rgba(212, 165, 90, 0.12);
+  }
+
+  .link-primary:hover {
+    background: linear-gradient(135deg, var(--gold-bright) 0%, var(--gold) 100%);
+    box-shadow:
+      0 10px 28px rgba(212, 165, 90, 0.4),
+      0 0 0 1px var(--gold-bright),
+      0 0 40px rgba(212, 165, 90, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  }
+
+  .link:hover::before { transform: translateX(100%); }
+  .link:hover .link-arrow { opacity: 1; transform: translateX(0); }
+  .link:hover .link-icon { transform: scale(1.08); }
+  .link-primary:hover .link-arrow { opacity: 1; }
+}
+
+.link:active {
+  transform: translateY(0) scale(0.99);
+  transition-duration: 0.1s;
+}
+
+.link:focus-visible {
+  outline: 2px solid var(--gold-bright);
+  outline-offset: 3px;
+}
+
+.link-icon {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  fill: var(--gold);
+  transition: transform 0.3s ease;
+}
+
+.link-text {
+  flex: 1;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.link-handle {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 13px;
+  letter-spacing: 0.02em;
+  opacity: 0.65;
+}
+
+.link-primary .link-handle { opacity: 0.75; }
+
+.link-arrow {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  stroke: var(--gold-soft);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+  opacity: 0.5;
+  transform: translateX(-4px);
+  transition: all 0.3s ease;
+}
+
+.footer {
+  margin-top: auto;
+  padding-top: 48px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  opacity: 0;
+  animation: fadeUp 1.2s ease-out 1.8s forwards;
+}
+
+.footer-credit {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  color: var(--cream-faint);
+}
+
+.footer-credit strong {
+  font-weight: 500;
+  color: var(--cream-dim);
+  font-style: normal;
+  letter-spacing: 0.04em;
+}
+
+.footer-year {
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  color: var(--cream-faint);
+  text-transform: uppercase;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes linkEnter {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 380px) {
+  .container { padding: 36px 18px 28px; }
+  .logo { width: 96px; height: 96px; margin-bottom: 20px; }
+  .header { margin-bottom: 36px; }
+  .link { padding: 12px 18px; font-size: 16px; min-height: 60px; }
+  .link-handle { font-size: 12px; }
+}
+
+@media (max-height: 700px) {
+  .header { margin-bottom: 32px; }
+  .logo { margin-bottom: 18px; }
+  .ornament { margin-top: 22px; }
+  .footer { padding-top: 32px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .firefly { display: none; }
+  .logo, .title, .tagline, .ornament, .link, .footer {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="background"></div>
+<div class="fireflies" id="fireflies" aria-hidden="true"></div>
+
+<main class="container">
+
+  <header class="header">
+
+    <!-- Logo officiel : graine almond avec fissure dorée et 5 étoiles à 4 branches -->
+    <svg class="logo" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Graine de Culture">
+
+      <!-- Étoile 1 : grande, en bas à gauche -->
+      <g class="star star-1">
+        <polygon points="78,55 82,72 99,76 82,80 78,97 74,80 57,76 74,72" fill="#D4A55A"/>
+      </g>
+
+      <!-- Étoile 2 : grande, en haut à droite -->
+      <g class="star star-2">
+        <polygon points="120,38 124,55 141,59 124,63 120,80 116,63 99,59 116,55" fill="#D4A55A"/>
+      </g>
+
+      <!-- Étoile 3 : moyenne, en bas à droite -->
+      <g class="star star-3">
+        <polygon points="128,82 130,90 138,92 130,94 128,102 126,94 118,92 126,90" fill="#D4A55A"/>
+      </g>
+
+      <!-- Étoile 4 : petite, en haut à gauche -->
+      <g class="star star-4">
+        <polygon points="62,46 63.5,53 70,54.5 63.5,56 62,63 60.5,56 54,54.5 60.5,53" fill="#D4A55A"/>
+      </g>
+
+      <!-- Étoile 5 : très petite, sommet -->
+      <g class="star star-5">
+        <polygon points="98,26 99.2,31 104.5,32 99.2,33 98,38 96.8,33 91.5,32 96.8,31" fill="#D4A55A"/>
+      </g>
+
+      <!-- Graine almond élancée -->
+      <path d="M100 102
+               C 87 105, 76 128, 76 156
+               C 76 174, 85 188, 100 192
+               C 115 188, 124 174, 124 156
+               C 124 128, 113 105, 100 102 Z"
+            fill="#E8DCC0"/>
+
+      <!-- Fissure centrale dorée -->
+      <path d="M100 104 Q102 132 99 162 Q97 180 100 191"
+            stroke="#D4A55A"
+            stroke-width="3"
+            stroke-linecap="round"
+            fill="none"/>
+
+    </svg>
+
+    <h1 class="title">Graine<span class="title-de">de</span>Culture</h1>
+
+    <p class="tagline">Cultivez votre curiosité</p>
+
+    <div class="ornament" aria-hidden="true">
+      <span class="line"></span>
+      <svg viewBox="0 0 12 12"><polygon points="6,0 7,4.5 12,6 7,7.5 6,12 5,7.5 0,6 5,4.5"/></svg>
+      <span class="line"></span>
+    </div>
+
+  </header>
+
+  <nav class="links" aria-label="Liens vers Graine de Culture">
+
+    <a class="link link-primary"
+       href="https://apps.apple.com/us/app/graine-de-culture/id6761060784"
+       target="_blank"
+       rel="noopener">
+      <svg class="link-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M17.05 12.04c-.03-2.78 2.27-4.12 2.37-4.18-1.29-1.89-3.3-2.15-4.02-2.18-1.71-.17-3.34 1.01-4.21 1.01-.87 0-2.21-.99-3.63-.96-1.87.03-3.6 1.09-4.56 2.76-1.95 3.38-.5 8.37 1.4 11.11.93 1.34 2.04 2.84 3.5 2.79 1.41-.06 1.94-.91 3.64-.91 1.7 0 2.18.91 3.66.88 1.51-.03 2.47-1.36 3.39-2.71 1.07-1.55 1.51-3.06 1.54-3.14-.03-.01-2.95-1.13-2.98-4.47zM14.27 4.13c.78-.94 1.3-2.25 1.16-3.55-1.12.05-2.48.75-3.28 1.69-.72.83-1.35 2.16-1.18 3.43 1.25.1 2.52-.63 3.3-1.57z"/>
+      </svg>
+      <span class="link-text">
+        <span>Télécharger l'app</span>
+        <span class="link-handle">App Store</span>
+      </span>
+      <svg class="link-arrow" viewBox="0 0 16 16" aria-hidden="true">
+        <path d="M3 8h10m0 0L9 4m4 4-4 4"/>
+      </svg>
+    </a>
+
+    <a class="link"
+       href="https://www.instagram.com/grainedeculturee/"
+       target="_blank"
+       rel="noopener">
+      <svg class="link-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M12 2c2.717 0 3.056.01 4.122.06 1.065.05 1.79.217 2.428.465.66.254 1.216.598 1.772 1.153a4.908 4.908 0 011.153 1.772c.247.637.415 1.363.465 2.428.047 1.066.06 1.405.06 4.122 0 2.717-.01 3.056-.06 4.122-.05 1.065-.218 1.79-.465 2.428a4.883 4.883 0 01-1.153 1.772 4.915 4.915 0 01-1.772 1.153c-.637.247-1.363.415-2.428.465-1.066.047-1.405.06-4.122.06-2.717 0-3.056-.01-4.122-.06-1.065-.05-1.79-.218-2.428-.465a4.89 4.89 0 01-1.772-1.153 4.904 4.904 0 01-1.153-1.772c-.248-.637-.415-1.363-.465-2.428C2.013 15.056 2 14.717 2 12c0-2.717.01-3.056.06-4.122.05-1.066.217-1.79.465-2.428.254-.66.598-1.216 1.153-1.772A4.897 4.897 0 015.45 2.525c.638-.248 1.362-.415 2.428-.465C8.944 2.013 9.283 2 12 2zm0 5a5 5 0 100 10 5 5 0 000-10zm6.5-.25a1.25 1.25 0 10-2.5 0 1.25 1.25 0 002.5 0zM12 9a3 3 0 110 6 3 3 0 010-6z"/>
+      </svg>
+      <span class="link-text">
+        <span>Instagram</span>
+        <span class="link-handle">@grainedeculturee</span>
+      </span>
+      <svg class="link-arrow" viewBox="0 0 16 16" aria-hidden="true">
+        <path d="M3 8h10m0 0L9 4m4 4-4 4"/>
+      </svg>
+    </a>
+
+    <a class="link"
+       href="https://www.tiktok.com/@graine.de.culture"
+       target="_blank"
+       rel="noopener">
+      <svg class="link-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M19.321 5.562a5.122 5.122 0 01-.443-.258 6.228 6.228 0 01-1.137-.966c-.849-.971-1.166-1.956-1.282-2.645h.004C16.367 1.272 16.4 1 16.4 1H12.96v13.32c0 .179 0 .354-.008.529 0 .021-.002.041-.003.063l-.001.026v.007a3.66 3.66 0 01-1.842 2.911 3.6 3.6 0 01-1.785.475c-2.011 0-3.642-1.64-3.642-3.667 0-2.025 1.631-3.666 3.642-3.666.38 0 .748.06 1.094.17l.004-3.498A7.144 7.144 0 008.99 7.65c-3.927 0-7.108 3.166-7.108 7.073 0 2.397 1.196 4.516 3.025 5.789a7.062 7.062 0 004.083 1.292c3.927 0 7.108-3.165 7.108-7.073V8.005a8.846 8.846 0 005.181 1.658V6.243s-1.286.058-2.958-.681z"/>
+      </svg>
+      <span class="link-text">
+        <span>TikTok</span>
+        <span class="link-handle">@graine.de.culture</span>
+      </span>
+      <svg class="link-arrow" viewBox="0 0 16 16" aria-hidden="true">
+        <path d="M3 8h10m0 0L9 4m4 4-4 4"/>
+      </svg>
+    </a>
+
+  </nav>
+
+  <footer class="footer">
+    <span class="footer-credit">Conçu par <strong>Arnaud Clavien</strong></span>
+    <span class="footer-year">MMXXVI</span>
+  </footer>
+
+</main>
+
+<script>
+(function() {
+  const container = document.getElementById('fireflies');
+  if (!container) return;
+
+  const isMobile = window.innerWidth < 600;
+  const count = isMobile ? 20 : 36;
+
+  let seed = 1337;
+  function rand() {
+    seed = (seed * 9301 + 49297) % 233280;
+    return seed / 233280;
+  }
+
+  const styleSheet = document.styleSheets[0];
+
+  try {
+    styleSheet.insertRule(`
+      @keyframes firefly-blink {
+        0%, 100% { opacity: 0.85; }
+        50% { opacity: 0.55; }
+      }
+    `, styleSheet.cssRules.length);
+  } catch (e) {}
+
+  for (let i = 0; i < count; i++) {
+    const f = document.createElement('div');
+    f.className = 'firefly';
+
+    const x = rand() * 100;
+    const y = rand() * 100;
+    const size = 2 + rand() * 3;
+    const floatDuration = 18 + rand() * 14;
+    const blinkDuration = 2 + rand() * 2;
+    const floatDelay = -rand() * floatDuration;
+    const blinkDelay = -rand() * blinkDuration;
+    const dx = (rand() - 0.5) * 32;
+    const dy = (rand() - 0.5) * 32;
+
+    f.style.cssText = `
+      left: ${x}%;
+      top: ${y}%;
+      width: ${size}px;
+      height: ${size}px;
+      animation:
+        firefly-float-${i} ${floatDuration}s ease-in-out ${floatDelay}s infinite alternate,
+        firefly-blink ${blinkDuration}s ease-in-out ${blinkDelay}s infinite;
+    `;
+
+    try {
+      styleSheet.insertRule(`
+        @keyframes firefly-float-${i} {
+          0% { transform: translate(0, 0); }
+          100% { transform: translate(${dx}px, ${dy}px); }
+        }
+      `, styleSheet.cssRules.length);
+    } catch (e) {}
+
+    container.appendChild(f);
+  }
+})();
+</script>
+
+</body>
+</html>
